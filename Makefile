@@ -1,29 +1,33 @@
-PROGRAM=cwiki
-COMPILER = gcc
+##
+# cwiki
+#
+# @file
+# @version 0.1
 
-LIBS = -lm
+EXECUTABLE = cwiki
 
-###
-CFLAGS  = -std=c99
-CFLAGS += -g
-CFLAGS += -Wall
-CFLAGS += -Wextra
-CFLAGS += -pedantic
-CFLAGS += -Werror
-CFLAGS += -Wmissing-declarations
-CFLAGS += -DUNITY_SUPPORT_64 -DUNITY_OUTPUT_COLOR
+CC = gcc
+CFLAGS  = -g -Wall
+LDLIBS = -lm -lncurses
 
-ASANFLAGS  = -fsanitize=address
-ASANFLAGS += -fno-common
-ASANFLAGS += -fno-omit-frame-pointer
+COMPILE := $(CC) $(CFLAGS) $(LDLIBS)
 
-D_SRC = src
-D_BIN = bin
+dir_guard=@mkdir -p $(@D)
 
-COMPILE=$(COMPILER) $(ASANFLAGS) $(CFLAGS) $(LDLIBS)
+default: $(EXECUTABLE)
 
-$(PROGRAM): $(D_SRC)/$(PROGRAM).c
-	@mkdir -p bin
-	$(COMPILE) $(D_SRC)/$(PROGRAM).c -o $(D_BIN)/$(PROGRAM)
-	@echo "Running cwiki"; echo ""
-	@./$(D_BIN)/$(PROGRAM)
+$(EXECUTABLE): bin/cwiki.o bin/tui.o
+	$(COMPILE) -o ./bin/$@ ./bin/cwiki.o ./bin/tui.o
+
+bin/cwiki.o: src/cwiki.c include/tui.h
+	$(dir_guard)
+	$(COMPILE) -c src/cwiki.c -o $@
+
+bin/tui.o: src/tui.c include/tui.h
+	$(dir_guard)
+	$(COMPILE) -c src/tui.c -o $@
+
+clean:
+	$(RM) ./bin/$(EXECUTABLE) ./bin/*.o ./bin/*~
+
+# end
