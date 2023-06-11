@@ -1,20 +1,31 @@
-#include "../include/tui.h"
+#include "../include/cwiki_tui.h"
+#include "../include/cwiki_log.h"
 
 #include <stdio.h>
 #include <math.h>
-#include <ncurses.h>
 
 int main(int argc, char *argv[]) {
     (void)argc;
     (void)argv;
 
-    // init_ncurses();
-    initscr();
+    char c;
 
-    puts(test());
+    // 1. Logging
+    cwiki_log_init_debug();
 
-    printf("Pi: %f\n", M_PI);
+    /* Setup ncurses */
+    init_ncurses();
 
-    endwin();
+    addstr("Hello, World!");
+    addstr("Hello, World!");
+
+    refresh();
+
+	while ( (c = getch()) != 'q' ) {
+
+    }
+
+    zlog_info(log_debug, "Terminating application");
+	endwin();
     return 0;
 }
