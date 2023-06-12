@@ -17,7 +17,9 @@ HDR_DIR := ./include
 
 SRCS := $(shell find $(SRC_DIR) -name '*.c')
 HDRS := $(shell find $(HDR_DIR) -name '*.h')
-OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
+OBJS_BAK := $(SRCS:%=$(BUILD_DIR)/%.o)
+
+OBJS := $(BUILD_DIR)/cwiki.o $(BUILD_DIR)/cwiki_tui.o $(BUILD_DIR)/cwiki_log.o $(BUILD_DIR)/cwiki_curl.o $(BUILD_DIR)/cwiki_utils.o
 
 dir_guard=@mkdir -p $(@D)
 
@@ -26,11 +28,12 @@ default: $(BUILD_DIR)/$(EXECUTABLE)
 print:
 	@echo $(SRCS)
 	@echo $(HDRS)
+	@echo $(OBJS)
 
 run:
 	./$(BUILD_DIR)/cwiki
 
-$(BUILD_DIR)/$(EXECUTABLE): $(BUILD_DIR)/cwiki.o $(BUILD_DIR)/cwiki_tui.o $(BUILD_DIR)/cwiki_log.o $(BUILD_DIR)/cwiki_curl.o
+$(BUILD_DIR)/$(EXECUTABLE): $(OBJS)
 	$(COMPILE) $^ -o $@
 
 # Define a pattern rule that compiles every .c file into a .o file
