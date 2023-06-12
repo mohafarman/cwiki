@@ -1,5 +1,6 @@
 #include "../include/cwiki_tui.h"
 #include "../include/cwiki_log.h"
+#include "../include/cwiki_curl.h"
 
 #include <stdio.h>
 #include <math.h>

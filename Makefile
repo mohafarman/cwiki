@@ -30,7 +30,7 @@ print:
 run:
 	./$(BUILD_DIR)/cwiki
 
-$(BUILD_DIR)/$(EXECUTABLE): $(BUILD_DIR)/cwiki.o $(BUILD_DIR)/cwiki_tui.o $(BUILD_DIR)/cwiki_log.o
+$(BUILD_DIR)/$(EXECUTABLE): $(BUILD_DIR)/cwiki.o $(BUILD_DIR)/cwiki_tui.o $(BUILD_DIR)/cwiki_log.o $(BUILD_DIR)/cwiki_curl.o
 	$(COMPILE) $^ -o $@
 
 # Define a pattern rule that compiles every .c file into a .o file
