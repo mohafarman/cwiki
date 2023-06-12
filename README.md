@@ -15,5 +15,5 @@ Inspired by the [wiki-tui](https://github.com/Builditluc/wiki-tui) project.
 
 # Acknowledgements
 
-* [ncures](https://invisible-island.net/ncurses/announce.html)
+* [ncurses](https://invisible-island.net/ncurses/announce.html)
 * [zlog](https://github.com/HardySimpson/zlog)

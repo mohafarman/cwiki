@@ -16,16 +16,13 @@ int main(int argc, char *argv[]) {
     /* Setup ncurses */
     init_ncurses();
 
-    addstr("Hello, World!");
-    addstr("Hello, World!");
-
     refresh();
 
 	while ( (c = getch()) != 'q' ) {
 
     }
 
-    zlog_info(log_debug, "Terminating application");
 	endwin();
+    zlog_info(log_debug, "Terminating application");
     return 0;
 }
