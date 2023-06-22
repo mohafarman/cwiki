@@ -8,6 +8,7 @@ Inspired by the [wiki-tui](https://github.com/Builditluc/wiki-tui) project.
 ## Logging
 
     [] - Save logs to file
+    [] - Make logging optional
 
 ## [ncurses](https://invisible-island.net/ncurses/announce.html)
 

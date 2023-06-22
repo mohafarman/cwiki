@@ -1,3 +1,4 @@
+#include "../include/cwiki.h"
 #include "../include/cwiki_tui.h"
 #include "../include/cwiki_log.h"
 #include "../include/cwiki_curl.h"
@@ -6,6 +7,8 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+
+cwiki_user *cwiki_user_data;
 
 int main(int argc, char *argv[]) {
     (void)argc;
@@ -28,19 +31,23 @@ int main(int argc, char *argv[]) {
         return EXIT_SUCCESS;
     }
 
+    /* Initialize user data */
+    /* NOTE: text_search only reads in a word, not sentences */
+    cwiki_user_data = malloc(sizeof(cwiki_user));
+
     // 1. Logging
     cwiki_log_init_debug();
 
     /* Setup ncurses */
-    init_ncurses();
+    cwiki_tui_init_ncurses();
 
-    refresh();
+    do  {
+        cwiki_tui_window_search();
+    } while ( (c = wgetch(stdscr)) != 'q' );
 
-	while ( (c = getch()) != 'q' ) {
-
-    }
-
-	endwin();
+    endwin();
     zlog_info(log_debug, "Terminating application");
+
+    printf("cwiki_user_data->text_search: %s\n", cwiki_user_data->text_search);
     return 0;
 }
