@@ -1,6 +1,8 @@
 #ifndef CWIKI_H_
 #define CWIKI_H_
 
+#include <stdio.h>
+
 typedef enum { search, view_article, view_toc } cwiki_state;
 
 typedef struct {

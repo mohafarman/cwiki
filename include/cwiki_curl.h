@@ -1,6 +1,15 @@
 #ifndef CWIKI_CURL_H_
 #define CWIKI_CURL_H_
 
-char *cwiki_curl_test();
+#include <stdio.h>
+
+typedef struct {
+    char *response;
+    size_t response_size;
+} MemoryStruct;
+
+int cwiki_curl_test();
+
+size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
 #endif // CWIKI_CURL_H_

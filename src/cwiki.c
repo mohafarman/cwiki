@@ -46,8 +46,10 @@ int main(int argc, char *argv[]) {
     } while ( (c = wgetch(stdscr)) != 'q' );
 
     endwin();
-    zlog_info(log_debug, "Terminating application");
 
-    printf("cwiki_user_data->text_search: %s\n", cwiki_user_data->text_search);
+    cwiki_curl_test();
+    free(cwiki_user_data);
+
+    zlog_info(log_debug, "Terminating application");
     return 0;
 }
