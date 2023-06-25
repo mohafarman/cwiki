@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-cwiki_user *cwiki_user_data;
+cwiki_user_s *cwiki_user_data;
 
 int main(int argc, char *argv[]) {
     (void)argc;
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 
     /* Initialize user data */
     /* NOTE: text_search only reads in a word, not sentences */
-    cwiki_user_data = malloc(sizeof(cwiki_user));
+    cwiki_user_data = malloc(sizeof(cwiki_user_s));
 
     // 1. Logging
     cwiki_log_init_debug();
@@ -47,7 +47,10 @@ int main(int argc, char *argv[]) {
 
     endwin();
 
-    cwiki_curl_test();
+    if (cwiki_curl_url(cwiki_user_data) != -1) {
+        printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_size);
+        printf("%s\n", cwiki_user_data->url_response);
+    }
     free(cwiki_user_data);
 
     zlog_info(log_debug, "Terminating application");

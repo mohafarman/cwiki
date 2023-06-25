@@ -7,9 +7,11 @@ typedef enum { search, view_article, view_toc } cwiki_state;
 
 typedef struct {
     char text_search[52];
-} cwiki_user;
+    char *url_response;
+    size_t url_response_size;
+} cwiki_user_s;
 
-extern cwiki_user *cwiki_user_data;
+extern cwiki_user_s *cwiki_user_data;
 
 /*
  * Create an enum with different states of the program
