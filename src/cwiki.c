@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
 
     if (cwiki_curl_url(cwiki_user_data) != -1) {
         printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_size);
-        printf("%s\n", cwiki_user_data->url_response);
+        // printf("%s\n", cwiki_user_data->url_response);
     }
     free(cwiki_user_data);
 

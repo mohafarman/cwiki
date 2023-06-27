@@ -6,7 +6,7 @@ int cwiki_tui_screen_height;
 int cwiki_tui_screen_width;
 
 void cwiki_tui_init_ncurses() {
-	char *header = "cwiki";
+	char *header = "| cwiki |";
 	initscr();
 	start_color();
 	cbreak();
@@ -35,11 +35,17 @@ void cwiki_tui_init_ncurses() {
 	refresh();
 }
 
-WINDOW *cwiki_tui_window_create(int height, int width, int start_y, int start_x) {
+WINDOW *cwiki_tui_window_create(int height, int width, int start_y, int start_x, const char *header) {
 	WINDOW *local_win = NULL;
 	keypad(local_win, TRUE);
 	local_win = newwin(height, width, start_y, start_x);
 	box(local_win, 0, 0);
+
+	/* Print header */
+	wattron(local_win, A_BOLD);
+	/* 4 magic number for offset */
+	mvwprintw(local_win, 0, width/2 - strlen(header) + 4, "%s", header);
+	wattroff(local_win, A_BOLD);
 
 	/* Display window */
 	wrefresh(local_win);
@@ -48,8 +54,9 @@ WINDOW *cwiki_tui_window_create(int height, int width, int start_y, int start_x)
 }
 
 void cwiki_tui_window_search() {
+	const char *header = "| Search |";
 	/* Center the search window */
-	WINDOW *window_search = cwiki_tui_window_create(WINDOW_SEARCH_HEIGHT, WINDOW_SEARCH_WIDTH, cwiki_tui_screen_height/4, cwiki_tui_screen_width/4);
+	WINDOW *window_search = cwiki_tui_window_create(WINDOW_SEARCH_HEIGHT, WINDOW_SEARCH_WIDTH, cwiki_tui_screen_height/4, cwiki_tui_screen_width/4, header);
 
 	echo();
 	curs_set(1);
