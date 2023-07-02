@@ -7,6 +7,7 @@ typedef enum { search, view_article, view_toc } cwiki_state;
 
 typedef struct {
     char text_search[52];
+    char *url;
     char *url_response;
     size_t url_response_size;
 } cwiki_user_s;

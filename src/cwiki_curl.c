@@ -4,6 +4,8 @@
 #include <string.h>
 #include <curl/curl.h>
 
+#define URL_BUFSIZE 128
+
 size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
   size_t realsize = size * nmemb;
@@ -27,11 +29,17 @@ size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *user
 int cwiki_curl_url(cwiki_user_s *cwiki_user_data) {
   CURL *curl_handle;
   CURLcode res;
+  char wiki_url[URL_BUFSIZE] = "https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=";
+  const char *wiki_url_format = "&format=json";
 
-  // MemoryStruct chunk;
-
-  // cwiki_user_data->response = malloc(1);  /* will be grown as needed by the realloc above */
   cwiki_user_data->url_response_size = 0;    /* no data at this point */
+
+  /* create the url */
+  strcat(wiki_url, cwiki_user_data->text_search);
+  /* specify format response from wikipedia, json here */
+  strcat(wiki_url, wiki_url_format);
+
+  cwiki_user_data->url = wiki_url;
 
   curl_global_init(CURL_GLOBAL_ALL);
 
@@ -39,7 +47,7 @@ int cwiki_curl_url(cwiki_user_s *cwiki_user_data) {
   curl_handle = curl_easy_init();
 
   /* specify URL to get */
-  curl_easy_setopt(curl_handle, CURLOPT_URL, cwiki_user_data->text_search);
+  curl_easy_setopt(curl_handle, CURLOPT_URL, wiki_url);
 
   /* send all data to this function  */
   curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
@@ -67,15 +75,10 @@ int cwiki_curl_url(cwiki_user_s *cwiki_user_data) {
      *
      * Do something nice with it!
      */
-
-    // printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_size);
-    // printf("%s\n", cwiki_user_data->url_response);
   }
 
   /* cleanup curl stuff */
   curl_easy_cleanup(curl_handle);
-
-  // free(cwiki_user_data->url_response);
 
   /* we are done with libcurl, so clean it up */
   curl_global_cleanup();
