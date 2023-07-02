@@ -41,10 +41,13 @@ int main(int argc, char *argv[]) {
 
     /* Setup ncurses */
     cwiki_tui_init_ncurses();
+    cwiki_tui_window_main();
 
     do  {
         /* User search article */
         cwiki_tui_window_search();
+
+        cwiki_tui_screen_clear();
 
         /* curl user search */
         if (cwiki_curl_url(cwiki_user_data) != -1) {

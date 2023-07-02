@@ -6,7 +6,6 @@ int cwiki_tui_screen_height;
 int cwiki_tui_screen_width;
 
 void cwiki_tui_init_ncurses() {
-	char *header = "| cwiki |";
 	initscr();
 	start_color();
 	cbreak();
@@ -19,19 +18,29 @@ void cwiki_tui_init_ncurses() {
 
 	curs_set(0);
 
-	/* Create a border */
-	box(stdscr, 0, 0);
-
 	/* Get max screen height and width */
 	getmaxyx(stdscr, cwiki_tui_screen_height, cwiki_tui_screen_width);
+
+	cwiki_tui_screen_clear();
+
+	zlog_info(log_debug, "ncurses initialized");
+}
+
+void cwiki_tui_window_main() {
+	char *header = "| cwiki |";
+
+	/* Create a border */
+	box(stdscr, 0, 0);
 
 	/* Print header */
 	wattron(stdscr, A_BOLD);
 	mvwprintw(stdscr, 0, cwiki_tui_screen_width/2 - strlen(header), "%s", header);
 	wattroff(stdscr, A_BOLD);
+}
 
-	zlog_info(log_debug, "ncurses initialized");
-
+void cwiki_tui_screen_clear() {
+	clear();
+	cwiki_tui_window_main();
 	refresh();
 }
 

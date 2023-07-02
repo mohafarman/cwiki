@@ -19,6 +19,9 @@ extern int cwiki_tui_screen_width;
 
 void cwiki_tui_init_ncurses();
 
+void cwiki_tui_window_main();
+void cwiki_tui_screen_clear();
+
 WINDOW *cwiki_tui_window_create(int, int, int, int, const char*);
 
 void cwiki_tui_window_search();
