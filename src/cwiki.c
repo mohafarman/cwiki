@@ -3,6 +3,7 @@
 #include "../include/cwiki_log.h"
 #include "../include/cwiki_curl.h"
 #include "../include/cwiki_utils.h"
+#include "../include/cwiki_parse.h"
 
 #include <stdio.h>
 #include <unistd.h>
@@ -42,15 +43,34 @@ int main(int argc, char *argv[]) {
     cwiki_tui_init_ncurses();
 
     do  {
+        /* User search article */
         cwiki_tui_window_search();
+
+        /* curl user search */
+        if (cwiki_curl_url(cwiki_user_data) != -1) {
+            printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_size);
+            // printf("%s\n", cwiki_user_data->url_response);
+        }
+
+        /* parse wikipedia response */
+        if (cwiki_parse_search(cwiki_user_data) == -1) {
+            printf("failed parsing\n");
+            break;
+        }
+
     } while ( (c = wgetch(stdscr)) != 'q' );
 
     endwin();
 
-    if (cwiki_curl_url(cwiki_user_data) != -1) {
-        printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_size);
-        // printf("%s\n", cwiki_user_data->url_response);
+    /* Print the parsed url response for debugging */
+    int row = 0, col = 0;
+    for (row = 0; row < 10; ++row) {
+        printf("Title %s, ", cwiki_user_data->url_response_parsed[row][col]);
+        printf("id %s\n", cwiki_user_data->url_response_parsed[row][col+1]);
+        printf("%s\n", cwiki_user_data->url_response_parsed[row][col+2]);
+        printf("\n");
     }
+
     free(cwiki_user_data);
 
     zlog_info(log_debug, "Terminating application");

@@ -10,6 +10,7 @@ typedef struct {
     char *url;
     char *url_response;
     size_t url_response_size;
+    char *url_response_parsed[10][3]; /* title, pageid, snippet */
 } cwiki_user_s;
 
 extern cwiki_user_s *cwiki_user_data;
