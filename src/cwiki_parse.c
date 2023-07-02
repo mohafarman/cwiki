@@ -4,7 +4,9 @@
 
 int cwiki_parse_search(cwiki_user_s* cwiki_user_data) {
     int status = 0;
-    int row = 0, col = 0;
+    int row = 0;
+    int col_title = 0, col_pageid = 1, col_snippet = 2;
+
     const cJSON *query = NULL;
     const cJSON *search = NULL;
     const cJSON *titles = NULL;
@@ -33,7 +35,7 @@ int cwiki_parse_search(cwiki_user_s* cwiki_user_data) {
         cJSON *pageid = cJSON_GetObjectItemCaseSensitive(titles, "pageid");
         cJSON *snippet = cJSON_GetObjectItemCaseSensitive(titles, "snippet");
 
-        if (!cJSON_IsString(title) || !cJSON_IsNumber(pageid)) {
+        if (!cJSON_IsString(title) || !cJSON_IsNumber(pageid) || !cJSON_IsString(snippet)) {
             status = -1;
             goto end;
         }
@@ -41,9 +43,9 @@ int cwiki_parse_search(cwiki_user_s* cwiki_user_data) {
         string_pageid = cJSON_Print(pageid);
         string_snippet = cJSON_Print(snippet);
 
-        cwiki_user_data->url_response_parsed[row][col] = string_title;
-        cwiki_user_data->url_response_parsed[row][col+1] = string_pageid;
-        cwiki_user_data->url_response_parsed[row][col+2] = string_snippet;
+        cwiki_user_data->url_response_parsed[row][col_title] = string_title;      /* [][0] */
+        cwiki_user_data->url_response_parsed[row][col_pageid] = string_pageid;    /* [][1] */
+        cwiki_user_data->url_response_parsed[row][col_snippet] = string_snippet;  /* [][2] */
         ++row;
     }
 
