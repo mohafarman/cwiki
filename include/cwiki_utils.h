@@ -25,4 +25,17 @@ void cwiki_utils_version(FILE *where);
  */
 void cwiki_utils_help(FILE *where);
 
+/*
+ * Removes html tags. Generated with help of ChatGPT.
+ */
+void cwiki_utils_remove_html_tags(char *);
+
+/*
+ * Removes quotations marks. Generated with help of ChatGPT.
+ */
+void cwiki_utils_remove_quotation_marks(char *);
+
+/* Combines remove_html_tags and remove_quotation_marks */
+void cwiki_utils_prettify(char *);
+
 #endif // CWIKI_UTILS_H_

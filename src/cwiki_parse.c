@@ -1,4 +1,5 @@
 #include "../include/cwiki_parse.h"
+#include "../include/cwiki_utils.h"
 
 #include <cjson/cJSON.h>
 
@@ -13,6 +14,7 @@ int cwiki_parse_search(cwiki_user_s* cwiki_user_data) {
     char *string_title = NULL;
     char *string_pageid = NULL;
     char *string_snippet = NULL;
+    // char *string_snippet_pretty = NULL;
 
     cJSON *search_json = cJSON_Parse(cwiki_user_data->url_response);
 
@@ -42,6 +44,10 @@ int cwiki_parse_search(cwiki_user_s* cwiki_user_data) {
         string_title = cJSON_Print(title);
         string_pageid = cJSON_Print(pageid);
         string_snippet = cJSON_Print(snippet);
+
+        cwiki_utils_prettify(string_title);
+        cwiki_utils_prettify(string_snippet);
+        cwiki_utils_prettify(string_pageid);
 
         cwiki_user_data->url_response_parsed[row][col_title] = string_title;      /* [][0] */
         cwiki_user_data->url_response_parsed[row][col_pageid] = string_pageid;    /* [][1] */

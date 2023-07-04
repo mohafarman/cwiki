@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 
     /* Setup ncurses */
     cwiki_tui_init_ncurses();
-    cwiki_tui_window_main();
+    cwiki_tui_screen_decorate();
 
     do  {
         /* User search article */
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
 
         /* curl user search */
         if (cwiki_curl_url(cwiki_user_data) != -1) {
-            printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_size);
+            // printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_size);
             // printf("%s\n", cwiki_user_data->url_response);
         }
 
@@ -61,18 +61,32 @@ int main(int argc, char *argv[]) {
             break;
         }
 
+        /* show results */
+        /* NOTE: User can now select an article */
+        /* TODO: From the selected article, loop over the array and extract pageid from it
+         *       so that it can be used to get the article */
+        cwiki_tui_window_articles(cwiki_user_data);
+
+        /* NOTE: consider using panel.h for viewing article and toc, so user can also cycle between them */
+
+        /* used to continue the program and displays the search bar */
+        ungetch(' ');
+
     } while ( (c = wgetch(stdscr)) != 'q' );
 
     endwin();
 
     /* Print the parsed url response for debugging */
-    int row = 0, col = 0;
-    for (row = 0; row < 10; ++row) {
-        printf("Title %s, ", cwiki_user_data->url_response_parsed[row][col]);
-        printf("id %s\n", cwiki_user_data->url_response_parsed[row][col+1]);
-        printf("%s\n", cwiki_user_data->url_response_parsed[row][col+2]);
-        printf("\n");
-    }
+    // int row = 0, col = 0;
+    // for (row = 0; row < 10; ++row) {
+    //     printf("Title %s, ", cwiki_user_data->url_response_parsed[row][col]);
+    //     printf("id %s\n", cwiki_user_data->url_response_parsed[row][col+1]);
+    //     printf("%s\n", cwiki_user_data->url_response_parsed[row][col+2]);
+    //     printf("\n");
+    // }
+
+    printf("%s", cwiki_user_data->url_response);
+    printf("selected article: %s\n", cwiki_user_data->selected_article_title);
 
     free(cwiki_user_data);
 

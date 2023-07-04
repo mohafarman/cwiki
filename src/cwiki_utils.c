@@ -3,6 +3,7 @@
 #include <getopt.h> // opterr, optarg, etc.
 #include <unistd.h> // getopt(), STDOUT_FILENO
 #include <stdbool.h>
+#include <string.h> // strlen
 
 #define PROGRAM_NAME "cwiki"
 #define PROGRAM_URL "https://github.com/mohafarman/cwiki"
@@ -45,4 +46,44 @@ void cwiki_utils_help(FILE *where)
     fprintf(where, "OPTIONS\n");
     fprintf(where, "\t-h\tprint this help text and exit\n");
     fprintf(where, "\t-v\tprint version information and exit\n");
+}
+
+void cwiki_utils_remove_html_tags(char *str) {
+    int inside_tag = 0;
+    char *src = str;
+    char *dest = str;
+
+    while (*src) {
+        if (*src == '<') {
+            inside_tag = 1;
+            src++;
+            continue;
+        }
+        if (*src == '>') {
+            inside_tag = 0;
+            src++;
+            continue;
+        }
+        if (!inside_tag) {
+            *dest = *src;
+            dest++;
+        }
+        src++;
+    }
+
+    *dest = '\0';
+}
+
+void cwiki_utils_remove_quotation_marks(char *str) {
+    int len = strlen(str);
+
+    if (str[0] == '"' && str[len - 1] == '"') {
+        strcpy(str, str + 1);
+        str[len - 2] = '\0';
+    }
+}
+
+void cwiki_utils_prettify(char *str) {
+    cwiki_utils_remove_html_tags(str);
+    cwiki_utils_remove_quotation_marks(str);
 }
