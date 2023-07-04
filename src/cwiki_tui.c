@@ -34,18 +34,20 @@ void cwiki_tui_init_ncurses() {
 
 void cwiki_tui_screen_decorate() {
 	char *header = "| cwiki |";
+	init_pair(1, COLOR_RED, COLOR_BLACK);
 
 	/* Create a border */
 	box(stdscr, 0, 0);
 
 	/* Print header */
-	wattron(stdscr, A_BOLD);
+	wattron(stdscr, A_BOLD | COLOR_PAIR(1));
 	mvwprintw(stdscr, 0, cwiki_tui_screen_width/2 - strlen(header), "%s", header);
-	wattroff(stdscr, A_BOLD);
+	wattroff(stdscr, A_BOLD | COLOR_PAIR(1));
 }
 
 void cwiki_tui_window_redraw(WINDOW *local_win, const char *header) {
 	int height, width;
+	init_pair(1, COLOR_RED, COLOR_BLACK);
 
 	getmaxyx(local_win, height, width);
 	(void)height;
@@ -54,9 +56,9 @@ void cwiki_tui_window_redraw(WINDOW *local_win, const char *header) {
 	box(local_win, 0, 0);
 
 	/* Print header */
-	wattron(local_win, A_BOLD);
+	wattron(local_win, A_BOLD | COLOR_PAIR(1));
 	mvwprintw(local_win, 0, width/2 - 4, "%s", header);
-	wattroff(local_win, A_BOLD);
+	wattroff(local_win, A_BOLD | COLOR_PAIR(1));
 
 	wrefresh(local_win);
 }
@@ -69,15 +71,18 @@ void cwiki_tui_screen_clear() {
 
 WINDOW *cwiki_tui_window_create(int height, int width, int start_y, int start_x, const char *header) {
 	WINDOW *local_win = NULL;
+
+	init_pair(1, COLOR_RED, COLOR_BLACK);
+
 	keypad(local_win, TRUE);
 	local_win = newwin(height, width, start_y, start_x);
 	box(local_win, 0, 0);
 
 	/* Print header */
-	wattron(local_win, A_BOLD);
+	wattron(local_win, A_BOLD | COLOR_PAIR(1));
 	/* 4 magic number for offset */
 	mvwprintw(local_win, 0, width/2 - strlen(header) + 4, "%s", header);
-	wattroff(local_win, A_BOLD);
+	wattroff(local_win, A_BOLD | COLOR_PAIR(1));
 
 	/* Display window */
 	wrefresh(local_win);
