@@ -107,7 +107,6 @@ void cwiki_tui_window_search() {
 }
 
 void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
-	/* use the menu.h from ncurses for the user to select and view snippets of the articles */
 	ITEM **items_articles;
 	MENU *menu_articles;
 	int num_article = 0;
@@ -115,10 +114,13 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 	int menu_height = 12, menu_width = 40;
 	int height, width;
 	int starty, startx;
-	// int window_snippets_width_padding = 4;
 	int c;
+	char header[52] = {0};
 
-	const char *header = "| Results |";
+	// const char *header = "| Results |";
+	strcat(header, "| Results for '");
+	strcat(header, cwiki_user_data->text_search);
+	strcat(header, "' |");
 
 	const char *header_preview = "| Preview |";
 	/* Center the search window */
@@ -129,8 +131,6 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 
 	getbegyx(window_articles, starty, startx);
 	getmaxyx(window_articles, height, width);
-
-	(void)startx;
 
 	/* Window to contain the window_snippets */
 	WINDOW *window_preview = cwiki_tui_window_create(
@@ -197,6 +197,7 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 			case 10: /* Return */
 				/*  Select an item */
 				cwiki_user_data->selected_article_title = item_name(current_item(menu_articles));
+				cwiki_user_data->selected_article_pageid = atoi(cwiki_user_data->url_response_parsed[num_article][2]);
 				goto end;
 		}
 	}
