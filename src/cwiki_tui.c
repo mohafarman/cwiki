@@ -93,7 +93,7 @@ WINDOW *cwiki_tui_window_create(int height, int width, int start_y, int start_x,
 	/* Print header */
 	wattron(local_win, A_BOLD | COLOR_PAIR(1));
 	/* 4 magic number for offset */
-	mvwprintw(local_win, 0, width/2 - strlen(header) + 4, "%s", header);
+	mvwprintw(local_win, 0, (width * 0.5) - strlen(header) + 4, "%s", header);
 	wattroff(local_win, A_BOLD | COLOR_PAIR(1));
 
 	/* Display window */
@@ -273,4 +273,63 @@ end:
 	delwin(window_info);
 	delwin(window_info_text);
 	cwiki_tui_screen_clear();
+}
+
+void cwiki_tui_window_article_view(cwiki_user_s* cwiki_user_data) {
+	(void)cwiki_user_data;
+	WINDOW *window_article_view, *window_article_toc;
+	PANEL  *panel_article_view, *panel_article_toc, *panel_active;
+	int article_view_height, article_view_width;
+	int c;
+	char header_article[52] = {0};
+	const char *header_toc = "| toc |";
+
+	clear();
+
+	strcat(header_article, "| ");
+	strcat(header_article, cwiki_user_data->selected_article_title);
+	strcat(header_article, " |");
+
+	/* Create windows for the panels */
+	window_article_view = cwiki_tui_window_create(cwiki_tui_screen_height, cwiki_tui_screen_width * 0.75,
+												  0, 1, header_article);
+
+	getmaxyx(window_article_view, article_view_height, article_view_width);
+	(void)article_view_height;
+
+	window_article_toc = cwiki_tui_window_create(cwiki_tui_screen_height, cwiki_tui_screen_width * 0.25,
+												  0, article_view_width, header_toc);
+
+	/* Attach a panel to each window */     /* Order is bottom up */
+	panel_article_view = new_panel(window_article_view);   /* Push 0, order: stdscr−0 */
+	panel_article_toc = new_panel(window_article_toc);   /* Push 0, order: stdscr−0-1 */
+
+   /* Set up the user pointers to the next panel */
+   set_panel_userptr(panel_article_view, panel_article_toc);
+   set_panel_userptr(panel_article_toc, panel_article_view);
+
+	/* Update the stacking order. 2nd panel will be on top */
+	update_panels();
+
+	/* Show it on the screen */
+	doupdate();
+
+   panel_active = panel_article_view;
+
+	while( (c = wgetch(stdscr)) != 'q' ) {
+		switch(c) {
+			case 9:
+				panel_active = (PANEL *)panel_userptr(panel_active);
+				top_panel(panel_active);
+				break;
+		}
+		update_panels();
+		doupdate();
+	}
+
+	del_panel(panel_article_view);
+	del_panel(panel_article_toc);
+
+	delwin(window_article_view);
+	delwin(window_article_toc);
 }

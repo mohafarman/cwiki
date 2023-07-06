@@ -5,6 +5,7 @@
 
 #include <ncurses.h>
 #include <menu.h>
+#include <panel.h>
 #include <string.h>
 
 #define WINDOW_MAIN_HEIGHT 20
@@ -31,5 +32,6 @@ WINDOW *cwiki_tui_window_create(int, int, int, int, const char*);
 
 void cwiki_tui_window_search();
 void cwiki_tui_window_articles(cwiki_user_s*);
+void cwiki_tui_window_article_view(cwiki_user_s*);
 
 #endif // TUI_H_

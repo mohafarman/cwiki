@@ -65,6 +65,7 @@ int main(int argc, char *argv[]) {
         cwiki_tui_window_articles(cwiki_user_data);
 
         /* NOTE: consider using panel.h for viewing article and toc, so user can also cycle between them */
+        cwiki_tui_window_article_view(cwiki_user_data);
 
         /* used to continue the program and displays the search bar */
         ungetch(' ');
