@@ -37,10 +37,12 @@ int main(int argc, char *argv[]) {
 
     /* Setup ncurses */
     cwiki_tui_init_ncurses();
-    cwiki_tui_screen_decorate();
 
      do
      {
+        /* Print logo */
+        cwiki_tui_screen_logo();
+        refresh();
         /* User search article */
         cwiki_tui_window_search();
 

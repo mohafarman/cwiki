@@ -23,6 +23,7 @@ extern int cwiki_tui_screen_width;
 void cwiki_tui_init_ncurses();
 
 void cwiki_tui_screen_decorate();
+void cwiki_tui_screen_logo();
 void cwiki_tui_window_redraw(WINDOW*, const char*);
 void cwiki_tui_screen_clear();
 
