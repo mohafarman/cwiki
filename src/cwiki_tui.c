@@ -196,17 +196,19 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 
 	post_menu(menu_articles);
 
-	wrefresh(window_articles);
-	wrefresh(window_preview);
-	wrefresh(window_info);
+	wnoutrefresh(window_articles);
+	wnoutrefresh(window_preview);
+	wnoutrefresh(window_info);
 
 	/* Print the preview_text of the first entry already */
 	mvwprintw(window_preview_text, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
-	wrefresh(window_preview_text);
+	wnoutrefresh(window_preview_text);
 
 	mvwprintw(window_info_text, 0, 0, "Pages: %s", cwiki_user_data->url_response_parsed[num_article][3]); /* Print word count */
 	mvwprintw(window_info_text, 1, 0, "Edited: %s", cwiki_user_data->url_response_parsed[num_article][4]); /* Print timestamp */
-	wrefresh(window_info_text);
+	wnoutrefresh(window_info_text);
+
+	doupdate();
 
 	while((c = wgetch(window_articles)) != 'q')
 	{
@@ -225,8 +227,10 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 				mvwprintw(window_preview_text, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
 				mvwprintw(window_info_text, 0, 0, "Pages: %s", cwiki_user_data->url_response_parsed[num_article][3]); /* Print word count */
 				mvwprintw(window_info_text, 1, 0, "Edited: %s", cwiki_user_data->url_response_parsed[num_article][4]); /* Print timestamp */
-				wrefresh(window_preview_text);
-				wrefresh(window_info_text);
+				wnoutrefresh(window_preview_text);
+				wnoutrefresh(window_info_text);
+
+				doupdate();
 				break;
 			case 'k':
 				menu_driver(menu_articles, REQ_UP_ITEM);
@@ -239,8 +243,10 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 				mvwprintw(window_preview_text, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
 				mvwprintw(window_info_text, 0, 0, "Pages: %s", cwiki_user_data->url_response_parsed[num_article][3]); /* Print word count */
 				mvwprintw(window_info_text, 1, 0, "Edited: %s", cwiki_user_data->url_response_parsed[num_article][4]); /* Print timestamp */
-				wrefresh(window_preview_text);
-				wrefresh(window_info_text);
+				wnoutrefresh(window_preview_text);
+				wnoutrefresh(window_info_text);
+
+				doupdate();
 				break;
 			case 10: /* Return */
 				/*  Select an item */
