@@ -5,16 +5,12 @@
 #include "../include/cwiki_utils.h"
 #include "../include/cwiki_parse.h"
 
-#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 
 cwiki_user_s *cwiki_user_data;
 
 int main(int argc, char *argv[]) {
-    (void)argc;
-    (void)argv;
-
     char c;
 
     // parse command line options
@@ -43,7 +39,8 @@ int main(int argc, char *argv[]) {
     cwiki_tui_init_ncurses();
     cwiki_tui_screen_decorate();
 
-    do  {
+     do
+     {
         /* User search article */
         cwiki_tui_window_search();
 
@@ -63,8 +60,6 @@ int main(int argc, char *argv[]) {
 
         /* show results */
         /* NOTE: User can now select an article */
-        /* TODO: From the selected article, loop over the array and extract pageid from it
-         *       so that it can be used to get the article */
         cwiki_tui_window_articles(cwiki_user_data);
 
         /* NOTE: consider using panel.h for viewing article and toc, so user can also cycle between them */
@@ -75,18 +70,6 @@ int main(int argc, char *argv[]) {
     } while ( (c = wgetch(stdscr)) != 'q' );
 
     endwin();
-
-    /* Print the parsed url response for debugging */
-    // int row = 0, col = 0;
-    // for (row = 0; row < 10; ++row) {
-    //     printf("Title %s, ", cwiki_user_data->url_response_parsed[row][col]);
-    //     printf("id %s\n", cwiki_user_data->url_response_parsed[row][col+1]);
-    //     printf("%s\n", cwiki_user_data->url_response_parsed[row][col+2]);
-    //     printf("\n");
-    // }
-
-    printf("%s", cwiki_user_data->url_response);
-    printf("selected article: %s\n", cwiki_user_data->selected_article_title);
 
     free(cwiki_user_data);
 

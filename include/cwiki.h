@@ -10,12 +10,14 @@ typedef struct {
     char *url;
     char *url_response;
     size_t url_response_size;
-    char *url_response_parsed[10][3]; /* title, pageid, snippet */
+    char *url_response_parsed[10][5]; /* title, pageid, snippet, wordcount, timestamp */
     const char *selected_article_title;
     int selected_article_pageid;
 } cwiki_user_s;
 
 extern cwiki_user_s *cwiki_user_data;
+
+void handle_signal(int);
 
 /*
  * Create an enum with different states of the program

@@ -2,7 +2,6 @@
 #include "../include/cwiki_tui.h"
 #include "../include/cwiki_log.h"
 
-#include <menu.h>
 #include <stdlib.h>
 
 #define ARRAY_SIZE(a) (sizeof(a) / sizeof(a[0]))
@@ -112,8 +111,12 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 	int num_article = 0;
 	/* enough height to view 10 articles, enough width to show most article titles */
 	int menu_height = 12, menu_width = 40;
-	int height, width;
-	int starty, startx;
+	int articles_height, articles_width;
+	int articles_starty, articles_startx;
+	int preview_height, preview_width;
+	int preview_starty, preview_startx;
+	int info_height, info_width;
+	int info_starty, info_startx;
 	int c;
 	char header[52] = {0};
 
@@ -123,28 +126,43 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 	strcat(header, "' |");
 
 	const char *header_preview = "| Preview |";
+	const char *header_info = "| Info |";
 	/* Center the search window */
 	/* TODO: Figure out a way to dynamically calcute center of the screen */
-	WINDOW *window_articles = cwiki_tui_window_create(cwiki_tui_screen_height/1.6, cwiki_tui_screen_width/1.6,
+	WINDOW *window_articles = cwiki_tui_window_create(cwiki_tui_screen_height/2, cwiki_tui_screen_width/1.6,
 													  cwiki_tui_screen_height/5, cwiki_tui_screen_width/5,
 													  header);
 
-	getbegyx(window_articles, starty, startx);
-	getmaxyx(window_articles, height, width);
+	getbegyx(window_articles, articles_starty, articles_startx);
+	getmaxyx(window_articles, articles_height, articles_width);
 
-	/* Window to contain the window_snippets */
+	/* Window to contain window_preview_text */
 	WINDOW *window_preview = cwiki_tui_window_create(
-		height / 2, width/2,
-		starty + 1, (startx + width)/1.7,
+		articles_height / 2, articles_width / 2,
+		articles_starty + 1, (articles_startx + articles_width) / 1.7,
 		header_preview);
 
-	getbegyx(window_preview, starty, startx);
-	getmaxyx(window_preview, height, width);
+	getbegyx(window_preview, preview_starty, preview_startx);
+	getmaxyx(window_preview, preview_height, preview_width);
 
-	/* Window for displaying snippets */
-	WINDOW *window_snippets = newwin(
-		height - 4, width - 4,
-		starty + 2, startx + 2);
+	/* Window for preview text */
+	WINDOW *window_preview_text = newwin(
+		preview_height - 4, preview_width - 4,
+		preview_starty + 2, preview_startx + 2);
+
+	/* Window to contain window_info_text */
+	WINDOW *window_info = cwiki_tui_window_create(
+		(articles_height / 2) - 1, articles_width / 2,
+		preview_starty + preview_height, (articles_startx + articles_width) / 1.7,
+		header_info);
+
+	getbegyx(window_info, info_starty, info_startx);
+	getmaxyx(window_info, info_height, info_width);
+
+	/* Window for displaying info text */
+	WINDOW *window_info_text = newwin(
+		info_height - 4, info_width - 4,
+		info_starty + 1, info_startx + 2);
 
 	/* Create items */
 	items_articles = (ITEM **)calloc(NUM_ARTICLES, sizeof(ITEM *));
@@ -162,11 +180,18 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 	set_menu_mark(menu_articles, " > ");
 
 	post_menu(menu_articles);
+
 	wrefresh(window_articles);
 	wrefresh(window_preview);
+	wrefresh(window_info);
 
-	mvwprintw(window_snippets, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
-	wrefresh(window_snippets);
+	/* Print the preview_text of the first entry already */
+	mvwprintw(window_preview_text, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
+	wrefresh(window_preview_text);
+
+	mvwprintw(window_info_text, 0, 0, "Pages: %s", cwiki_user_data->url_response_parsed[num_article][3]); /* Print word count */
+	mvwprintw(window_info_text, 1, 0, "Edited: %s", cwiki_user_data->url_response_parsed[num_article][4]); /* Print timestamp */
+	wrefresh(window_info_text);
 
 	while((c = wgetch(window_articles)) != 'q')
 	{
@@ -180,9 +205,13 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 				if (num_article < NUM_ARTICLES - 1) {
 					num_article++;
 				}
-				wclear(window_snippets);
-				mvwprintw(window_snippets, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
-				wrefresh(window_snippets);
+				wclear(window_preview_text);
+				wclear(window_info_text);
+				mvwprintw(window_preview_text, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
+				mvwprintw(window_info_text, 0, 0, "Pages: %s", cwiki_user_data->url_response_parsed[num_article][3]); /* Print word count */
+				mvwprintw(window_info_text, 1, 0, "Edited: %s", cwiki_user_data->url_response_parsed[num_article][4]); /* Print timestamp */
+				wrefresh(window_preview_text);
+				wrefresh(window_info_text);
 				break;
 			case 'k':
 				menu_driver(menu_articles, REQ_UP_ITEM);
@@ -190,9 +219,13 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 				if (num_article > 0) {
 					num_article--;
 				}
-				wclear(window_snippets);
-				mvwprintw(window_snippets, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
-				wrefresh(window_snippets);
+				wclear(window_preview_text);
+				wclear(window_info_text);
+				mvwprintw(window_preview_text, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
+				mvwprintw(window_info_text, 0, 0, "Pages: %s", cwiki_user_data->url_response_parsed[num_article][3]); /* Print word count */
+				mvwprintw(window_info_text, 1, 0, "Edited: %s", cwiki_user_data->url_response_parsed[num_article][4]); /* Print timestamp */
+				wrefresh(window_preview_text);
+				wrefresh(window_info_text);
 				break;
 			case 10: /* Return */
 				/*  Select an item */
@@ -200,9 +233,14 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 				cwiki_user_data->selected_article_pageid = atoi(cwiki_user_data->url_response_parsed[num_article][2]);
 				goto end;
 		}
+
+		if (c == 'q') {
+			goto end;
+		}
 	}
 
 end:
+	/* TODO: Figure out if this runs when user quits the while loop, 'q' */
 	/* Unpost and free all the memory taken up */
 	unpost_menu(menu_articles);
 	free_menu(menu_articles);
@@ -210,6 +248,8 @@ end:
 			free_item(items_articles[i]);
 	delwin(window_articles);
 	delwin(window_preview);
-	delwin(window_snippets);
+	delwin(window_preview_text);
+	delwin(window_info);
+	delwin(window_info_text);
 	cwiki_tui_screen_clear();
 }

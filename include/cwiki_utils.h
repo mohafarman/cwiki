@@ -38,4 +38,14 @@ void cwiki_utils_remove_quotation_marks(char *);
 /* Combines remove_html_tags and remove_quotation_marks */
 void cwiki_utils_prettify(char *);
 
+/*
+ * Removes the time at the end and preserved the date
+*/
+void cwiki_utils_get_date(char *str);
+
+/*
+ * Return number of pages based on word count
+ */
+char *cwiki_utils_calculate_pages(char *str_words);
+
 #endif // CWIKI_UTILS_H_

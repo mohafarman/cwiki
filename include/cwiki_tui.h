@@ -4,6 +4,7 @@
 #include "cwiki.h"
 
 #include <ncurses.h>
+#include <menu.h>
 #include <string.h>
 
 #define WINDOW_MAIN_HEIGHT 20

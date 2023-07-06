@@ -4,6 +4,7 @@
 #include <unistd.h> // getopt(), STDOUT_FILENO
 #include <stdbool.h>
 #include <string.h> // strlen
+#include <stdlib.h> // atoi
 
 #define PROGRAM_NAME "cwiki"
 #define PROGRAM_URL "https://github.com/mohafarman/cwiki"
@@ -83,7 +84,29 @@ void cwiki_utils_remove_quotation_marks(char *str) {
     }
 }
 
-void cwiki_utils_prettify(char *str) {
-    cwiki_utils_remove_html_tags(str);
-    cwiki_utils_remove_quotation_marks(str);
+void cwiki_utils_get_date(char *str) {
+    /* The date from the json response are the first 10 char */
+    int i;
+    for (i = 10; str[i] != '\0'; i++) {
+        /* NULL terminate the rest of the string */
+        str[i] = '\0';
+    }
+}
+
+char *cwiki_utils_calculate_pages(char *str_words) {
+    /* 450 words in one page */
+    int words_per_page = 450;
+    int pages;
+    char str_pages[12];
+    char *res = malloc(sizeof 12);
+
+    int words = atoi(str_words);
+
+    pages = words / words_per_page;
+
+    sprintf(str_pages, "%d", pages);
+
+    strcpy(res, str_pages);
+
+    return res;
 }
