@@ -7,6 +7,7 @@ int cwiki_parse_search(cwiki_user_s* cwiki_user_data) {
     int status = 0;
     int row = 0;
     int col_title = 0, col_pageid = 1, col_snippet = 2;
+    int col_wordcount = 3, col_timestamp = 4;
 
     const cJSON *query = NULL;
     const cJSON *search = NULL;
@@ -14,6 +15,8 @@ int cwiki_parse_search(cwiki_user_s* cwiki_user_data) {
     char *string_title = NULL;
     char *string_pageid = NULL;
     char *string_snippet = NULL;
+    char *string_wordcount = NULL;
+    char *string_timestamp = NULL;
     // char *string_snippet_pretty = NULL;
 
     cJSON *search_json = cJSON_Parse(cwiki_user_data->url_response);
@@ -36,22 +39,34 @@ int cwiki_parse_search(cwiki_user_s* cwiki_user_data) {
         cJSON *title = cJSON_GetObjectItemCaseSensitive(titles, "title");
         cJSON *pageid = cJSON_GetObjectItemCaseSensitive(titles, "pageid");
         cJSON *snippet = cJSON_GetObjectItemCaseSensitive(titles, "snippet");
+        cJSON *wordcount = cJSON_GetObjectItemCaseSensitive(titles, "wordcount");
+        cJSON *timestamp = cJSON_GetObjectItemCaseSensitive(titles, "timestamp");
 
-        if (!cJSON_IsString(title) || !cJSON_IsNumber(pageid) || !cJSON_IsString(snippet)) {
+        if (!cJSON_IsString(title) || !cJSON_IsNumber(pageid) || !cJSON_IsString(snippet) ||
+            !cJSON_IsNumber(wordcount) || !cJSON_IsString(timestamp)) {
             status = -1;
             goto end;
         }
         string_title = cJSON_Print(title);
         string_pageid = cJSON_Print(pageid);
         string_snippet = cJSON_Print(snippet);
+        string_wordcount = cJSON_Print(snippet);
+        string_timestamp = cJSON_Print(snippet);
 
-        cwiki_utils_prettify(string_title);
-        cwiki_utils_prettify(string_snippet);
-        cwiki_utils_prettify(string_pageid);
+        /* Prettify the strings */
+        cwiki_utils_remove_quotation_marks(string_title);
+        cwiki_utils_remove_quotation_marks(string_pageid);
+        cwiki_utils_remove_quotation_marks(string_wordcount);
+        cwiki_utils_remove_quotation_marks(string_timestamp);
 
-        cwiki_user_data->url_response_parsed[row][col_title] = string_title;      /* [][0] */
-        cwiki_user_data->url_response_parsed[row][col_pageid] = string_pageid;    /* [][1] */
-        cwiki_user_data->url_response_parsed[row][col_snippet] = string_snippet;  /* [][2] */
+        cwiki_utils_remove_html_tags(string_snippet);
+        cwiki_utils_remove_quotation_marks(string_snippet);
+
+        cwiki_user_data->url_response_parsed[row][col_title] = string_title;          /* [][0] */
+        cwiki_user_data->url_response_parsed[row][col_pageid] = string_pageid;        /* [][1] */
+        cwiki_user_data->url_response_parsed[row][col_snippet] = string_snippet;      /* [][2] */
+        cwiki_user_data->url_response_parsed[row][col_wordcount] = string_wordcount;  /* [][3] */
+        cwiki_user_data->url_response_parsed[row][col_timestamp] = string_timestamp;  /* [][4] */
         ++row;
     }
 
