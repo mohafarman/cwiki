@@ -34,4 +34,6 @@ void cwiki_tui_window_search();
 void cwiki_tui_window_articles(cwiki_user_s*);
 void cwiki_tui_window_article_view(cwiki_user_s*);
 
+void cwiki_tui_window_focus(WINDOW*, bool);
+
 #endif // TUI_H_

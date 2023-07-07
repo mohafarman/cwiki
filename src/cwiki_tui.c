@@ -277,8 +277,8 @@ end:
 
 void cwiki_tui_window_article_view(cwiki_user_s* cwiki_user_data) {
 	(void)cwiki_user_data;
-	WINDOW *window_article_view, *window_article_toc;
-	PANEL  *panel_article_view, *panel_article_toc, *panel_active;
+	WINDOW *window_article_view, *window_article_toc, *window_focus;
+	PANEL  *panel_article_view, *panel_article_toc, *panel_focus;
 	int article_view_height, article_view_width;
 	int c;
 	char header_article[52] = {0};
@@ -308,19 +308,33 @@ void cwiki_tui_window_article_view(cwiki_user_s* cwiki_user_data) {
    set_panel_userptr(panel_article_view, panel_article_toc);
    set_panel_userptr(panel_article_toc, panel_article_view);
 
+	/* TODO: Show the user which panel is currently in focus */
+   panel_focus = panel_article_view;
+
+   /* Set current window as focused */
+	window_focus = panel_window(panel_focus);
+	cwiki_tui_window_focus(window_focus, TRUE);
+
 	/* Update the stacking order. 2nd panel will be on top */
 	update_panels();
 
 	/* Show it on the screen */
 	doupdate();
 
-   panel_active = panel_article_view;
-
 	while( (c = wgetch(stdscr)) != 'q' ) {
 		switch(c) {
+			/* Tab to alternate focus between article and toc */
 			case 9:
-				panel_active = (PANEL *)panel_userptr(panel_active);
-				top_panel(panel_active);
+				/* Unfocus current window */
+				cwiki_tui_window_focus(window_focus, FALSE);
+
+				panel_focus = (PANEL *)panel_userptr(panel_focus);
+				top_panel(panel_focus);
+				window_focus = panel_window(panel_focus);
+
+				/* Set newly focused window to focus */
+				cwiki_tui_window_focus(window_focus, TRUE);
+
 				break;
 		}
 		update_panels();
@@ -332,4 +346,33 @@ void cwiki_tui_window_article_view(cwiki_user_s* cwiki_user_data) {
 
 	delwin(window_article_view);
 	delwin(window_article_toc);
+}
+
+void cwiki_tui_window_focus(WINDOW *local_win, bool focus) {
+	int height, width;
+	// int vline_y = 1;
+	// int hline_x = 4;
+	init_pair(1, COLOR_RED, COLOR_BLACK);
+
+	getmaxyx(local_win, height, width);
+
+	if (focus) {
+		wattron(local_win, COLOR_PAIR(1));
+		/* Print lines on left, right and bottom of window */
+		// mvwvline(local_win, vline_y, 0, 0, height - 1); /* left side */
+		// mvwvline(local_win, vline_y, width - 1, 0, height - 1); /* right side */
+
+		mvwhline(local_win, height - 1, width * 0.1, 0, width * 0.8); /* bottom side*/
+		wattroff(local_win, COLOR_PAIR(1));
+
+		return;
+	}
+
+	/* If window is not focused then print lines without colors */
+	// mvwvline(local_win, vline_y, 0, 0, height - 1); /* left side */
+	// mvwvline(local_win, vline_y, width - 1, 0, height - 1); /* right side */
+
+	mvwhline(local_win, height - 1, width * 0.1, 0, width * 0.8); /* bottom side*/
+
+	wrefresh(local_win);
 }
