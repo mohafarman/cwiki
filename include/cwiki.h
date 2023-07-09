@@ -13,6 +13,9 @@ typedef struct {
     char *url_response_parsed[10][5]; /* title, pageid, snippet, wordcount, timestamp */
     const char *selected_article_title;
     int selected_article_pageid;
+    char *url_article;
+    char *url_article_response;
+    size_t url_article_response_size;
 } cwiki_user_s;
 
 extern cwiki_user_s *cwiki_user_data;

@@ -64,15 +64,25 @@ int main(int argc, char *argv[]) {
         /* NOTE: User can now select an article */
         cwiki_tui_window_articles(cwiki_user_data);
 
+        /* TODO: Curl article */
+        if (cwiki_curl_article(cwiki_user_data) == -1) {
+            break;
+        }
+
         /* NOTE: consider using panel.h for viewing article and toc, so user can also cycle between them */
         cwiki_tui_window_article_view(cwiki_user_data);
 
         /* used to continue the program and displays the search bar */
-        ungetch(' ');
+        // ungetch(' ');
 
     } while ( (c = wgetch(stdscr)) != 'q' );
 
     endwin();
+
+    printf("URL: %s\n", cwiki_user_data->url);
+    /* Prints gibberish, somethings wrong with memory alloc */
+    printf("size: %lu\n", cwiki_user_data->url_response_size);
+    printf("RESPONSE: %s\n", cwiki_user_data->url_response);
 
     free(cwiki_user_data);
 

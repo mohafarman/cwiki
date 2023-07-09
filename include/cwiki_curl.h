@@ -12,6 +12,8 @@ typedef struct {
 
 int cwiki_curl_url(cwiki_user_s*);
 
+int cwiki_curl_article(cwiki_user_s*);
+
 size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
 #endif // CWIKI_CURL_H_
