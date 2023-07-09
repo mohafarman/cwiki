@@ -20,7 +20,7 @@ typedef struct {
 
 extern cwiki_user_s *cwiki_user_data;
 
-void handle_signal(int);
+cwiki_user_s *cwiki_init_user_s(cwiki_user_s*);
 
 /*
  * Create an enum with different states of the program

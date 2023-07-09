@@ -30,7 +30,8 @@ int main(int argc, char *argv[]) {
 
     /* Initialize user data */
     /* NOTE: text_search only reads in a word, not sentences */
-    cwiki_user_data = malloc(sizeof(cwiki_user_s));
+    // cwiki_user_data = malloc(sizeof(cwiki_user_s));
+    cwiki_user_data = cwiki_init_user_s(cwiki_user_data);
 
     // 1. Logging
     cwiki_log_init_debug();
@@ -88,4 +89,21 @@ int main(int argc, char *argv[]) {
 
     zlog_info(log_debug, "Terminating application");
     return 0;
+}
+
+cwiki_user_s *cwiki_init_user_s(cwiki_user_s* cwiki_user_data) {
+    cwiki_user_data = calloc(1, sizeof(cwiki_user_s));
+
+    strcpy(cwiki_user_data->text_search, "");
+    cwiki_user_data->url = NULL;
+    cwiki_user_data->url_response = NULL;
+    cwiki_user_data->url_response_size = 0;
+    cwiki_user_data->url_response_parsed[9][4] = calloc(1, sizeof cwiki_user_data->url_response_parsed[9][4]);
+    cwiki_user_data->selected_article_title = NULL;
+    cwiki_user_data->selected_article_pageid = 0;
+    cwiki_user_data->url_article = NULL;
+    cwiki_user_data->url_article_response = NULL;
+    cwiki_user_data->url_article_response_size = 0;
+
+    return cwiki_user_data;
 }
