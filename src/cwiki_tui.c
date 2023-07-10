@@ -250,7 +250,9 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 				break;
 			case 10: /* Return */
 				/*  Select an item */
-				cwiki_user_data->selected_article_title = item_name(current_item(menu_articles));
+				cwiki_user_data->selected_article_title = malloc(strlen(item_name(current_item(menu_articles))) + 1);
+
+				cwiki_user_data->selected_article_title = (char *)item_name(current_item(menu_articles));
 				cwiki_user_data->selected_article_pageid = atoi(cwiki_user_data->url_response_parsed[num_article][2]);
 				goto end;
 		}

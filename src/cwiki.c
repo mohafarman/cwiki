@@ -49,8 +49,10 @@ int main(int argc, char *argv[]) {
 
         cwiki_tui_screen_clear();
 
+        cwiki_curl_url_search(cwiki_user_data);
+
         /* curl user search */
-        if (cwiki_curl_url(cwiki_user_data) != -1) {
+        if (cwiki_curl_url(cwiki_user_data, FALSE) != -1) {
             // printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_size);
             // printf("%s\n", cwiki_user_data->url_response);
         }
@@ -65,8 +67,11 @@ int main(int argc, char *argv[]) {
         /* NOTE: User can now select an article */
         cwiki_tui_window_articles(cwiki_user_data);
 
+        /* Create a valid url */
+        cwiki_curl_url_article(cwiki_user_data);
+
         /* TODO: Curl article */
-        if (cwiki_curl_article(cwiki_user_data) == -1) {
+        if (cwiki_curl_url(cwiki_user_data, TRUE) == -1) {
             break;
         }
 
@@ -80,11 +85,14 @@ int main(int argc, char *argv[]) {
 
     endwin();
 
+    /* Debugging purposes */
     printf("URL: %s\n", cwiki_user_data->url);
     /* Prints gibberish, somethings wrong with memory alloc */
     printf("size: %lu\n", cwiki_user_data->url_response_size);
     printf("RESPONSE: %s\n", cwiki_user_data->url_response);
 
+    free(cwiki_user_data->url_response);
+    free(cwiki_user_data->selected_article_title);
     free(cwiki_user_data);
 
     zlog_info(log_debug, "Terminating application");
@@ -94,16 +102,15 @@ int main(int argc, char *argv[]) {
 cwiki_user_s *cwiki_init_user_s(cwiki_user_s* cwiki_user_data) {
     cwiki_user_data = calloc(1, sizeof(cwiki_user_s));
 
-    strcpy(cwiki_user_data->text_search, "");
+    // strcpy(cwiki_user_data->text_search, "");
     cwiki_user_data->url = NULL;
-    cwiki_user_data->url_response = NULL;
+    cwiki_user_data->url_response = malloc(1);
     cwiki_user_data->url_response_size = 0;
     cwiki_user_data->url_response_parsed[9][4] = calloc(1, sizeof cwiki_user_data->url_response_parsed[9][4]);
     cwiki_user_data->selected_article_title = NULL;
     cwiki_user_data->selected_article_pageid = 0;
-    cwiki_user_data->url_article = NULL;
-    cwiki_user_data->url_article_response = NULL;
-    cwiki_user_data->url_article_response_size = 0;
+    cwiki_user_data->url_response_article = malloc(1);
+    cwiki_user_data->url_response_article_size = 0;
 
     return cwiki_user_data;
 }

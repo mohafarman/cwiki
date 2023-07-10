@@ -7,7 +7,7 @@
 EXECUTABLE = cwiki
 
 CC = gcc
-CFLAGS=-g -Wall -Werror -pedantic
+CFLAGS=-g3 -Wall -Werror -pedantic -std=c11 -O0
 LDLIBS = -lm -lncurses -lmenu -lzlog -lcurl -lcjson -lpanel
 COMPILE = $(CC) $(CFLAGS) $(LDLIBS)
 

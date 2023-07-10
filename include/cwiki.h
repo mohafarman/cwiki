@@ -6,16 +6,15 @@
 typedef enum { search, view_article, view_toc } cwiki_state;
 
 typedef struct {
-    char text_search[52];
     char *url;
     char *url_response;
     size_t url_response_size;
     char *url_response_parsed[10][5]; /* title, pageid, snippet, wordcount, timestamp */
-    const char *selected_article_title;
+    char *selected_article_title;
     int selected_article_pageid;
-    char *url_article;
-    char *url_article_response;
-    size_t url_article_response_size;
+    char *url_response_article;
+    size_t url_response_article_size;
+    char text_search[52];
 } cwiki_user_s;
 
 extern cwiki_user_s *cwiki_user_data;
