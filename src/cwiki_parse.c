@@ -4,7 +4,7 @@
 #include <cjson/cJSON.h>
 #include <stdlib.h>
 
-int cwiki_parse_search(cwiki_user_s* cwiki_user_data) {
+int cwiki_parse_search() {
     int status = 0;
     int row = 0;
     int col_title = 0, col_pageid = 1, col_snippet = 2;
@@ -83,4 +83,9 @@ int cwiki_parse_search(cwiki_user_s* cwiki_user_data) {
 end:
     cJSON_Delete(search_json);
     return status;
+}
+
+int cwiki_parse_article() {
+
+    return 0;
 }

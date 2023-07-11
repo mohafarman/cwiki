@@ -3,6 +3,8 @@
 
 #include "../include/cwiki.h"
 
-int cwiki_parse_search(cwiki_user_s*);
+int cwiki_parse_search();
+
+int cwiki_parse_article();
 
 #endif // CWIKI_PARSE_H_

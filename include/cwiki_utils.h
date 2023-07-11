@@ -35,6 +35,11 @@ void cwiki_utils_remove_html_tags(char *);
  */
 void cwiki_utils_remove_quotation_marks(char *);
 
+/*
+ * Encode spaces with %20, required for HTTP request
+ */
+char *cwiki_utils_encode_spaces(char *);
+
 /* Combines remove_html_tags and remove_quotation_marks */
 void cwiki_utils_prettify(char *);
 

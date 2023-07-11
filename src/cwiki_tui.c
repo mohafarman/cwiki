@@ -114,6 +114,7 @@ void cwiki_tui_window_search() {
 
 	/* NOTE: only first word of user input is stored in search */
 	/* TODO: Make whole sentence get stored in search */
+	/* NOTE: Maybe doesn't matter if I use pageid to get article later in the program? */
 	mvwscanw(window_search, 1, 1, "%s", search);
 
 	noecho();

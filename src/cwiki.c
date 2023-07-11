@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
         /* Print logo */
         cwiki_tui_screen_logo();
         refresh();
-        /* to here */
+        /* to here, unnecessary */
 
         /* User search article */
         cwiki_tui_window_search();
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
         }
 
         /* parse wikipedia response */
-        if (cwiki_parse_search(cwiki_user_data) == -1) {
+        if (cwiki_parse_search() == -1) {
             printf("failed parsing\n");
             break;
         }
@@ -88,6 +88,7 @@ int main(int argc, char *argv[]) {
     endwin();
 
     /* Debugging purposes */
+    printf("URL: %s\n", cwiki_user_data->url);
     printf("size: %lu\n", cwiki_user_data->url_response_article_size);
     printf("RESPONSE: %s\n", cwiki_user_data->url_response_article);
 

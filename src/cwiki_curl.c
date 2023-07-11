@@ -1,4 +1,5 @@
 #include "../include/cwiki_curl.h"
+#include "../include/cwiki_utils.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -23,9 +24,13 @@ int cwiki_curl_set_url_search() {
 int cwiki_curl_set_url_article() {
   char wiki_url[URL_BUFSIZE] = "http://en.wikipedia.org/w/api.php?action=query&format=json&prop=extracts&titles=";
   const char *wiki_url_content = "&formatversion=2";
+  char *title = cwiki_user_data->selected_article_title;
+
+  /* Replaces spaces with %20 encoding */
+  title = cwiki_utils_encode_spaces(title);
 
   /* Create the url */
-  strcat(wiki_url, cwiki_user_data->selected_article_title);
+  strcat(wiki_url, title);
   strcat(wiki_url, wiki_url_content);
 
   /* Copy it over to our struct */

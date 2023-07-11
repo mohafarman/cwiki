@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <string.h> // strlen
 #include <stdlib.h> // atoi
+#include <ctype.h> // isspace
 
 #define PROGRAM_NAME "cwiki"
 #define PROGRAM_URL "https://github.com/mohafarman/cwiki"
@@ -109,4 +110,37 @@ char *cwiki_utils_calculate_pages(char *str_words) {
     strcpy(res, str_pages);
 
     return res;
+}
+
+char *cwiki_utils_encode_spaces(char *str) {
+    size_t spaces = 0;
+    size_t i = 0;
+
+    for (i = 0; str[i] != '\0'; i++) {
+      if(str[i] == ' ')
+      spaces++;
+    }
+
+    char *output = malloc(i + spaces * 2 + 1);
+    if(output == NULL) return NULL;
+
+    size_t k = 0;
+    while(*str !='\0')
+    {
+        if(*str == ' ')
+        {
+            output[k++] = '%';
+            output[k++] = '2';
+            output[k++] = '0';
+        }
+        else
+        {
+          output[k++] = *str;
+        }
+        str++;
+    }
+
+    output[k++] = '\0';
+
+    return output;
 }
