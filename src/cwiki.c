@@ -29,8 +29,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* Initialize user data */
-    /* NOTE: text_search only reads in a word, not sentences */
-    cwiki_user_data = cwiki_init_user_s(cwiki_user_data);
+    cwiki_init_user();
 
     enum cwiki_curl curl;
 
@@ -82,7 +81,7 @@ int main(int argc, char *argv[]) {
         cwiki_tui_window_article_view();
 
         /* used to continue the program and displays the search bar */
-        ungetch(' ');
+        // ungetch(' ');
 
     } while ( (c = wgetch(stdscr)) != 'q' );
 
@@ -92,17 +91,13 @@ int main(int argc, char *argv[]) {
     printf("size: %lu\n", cwiki_user_data->url_response_article_size);
     printf("RESPONSE: %s\n", cwiki_user_data->url_response_article);
 
-    free(cwiki_user_data->search);
-    free(cwiki_user_data->url_response_search);
-    free(cwiki_user_data->selected_article_title);
-    free(cwiki_user_data->url_response_article);
-    free(cwiki_user_data);
+    cwiki_destroy_user();
 
     zlog_info(log_debug, "Terminating application");
     return 0;
 }
 
-cwiki_user_s *cwiki_init_user_s(cwiki_user_s* cwiki_user_data) {
+void cwiki_init_user() {
     cwiki_user_data = calloc(1, sizeof(cwiki_user_s));
 
     cwiki_user_data->search = NULL;
@@ -114,6 +109,12 @@ cwiki_user_s *cwiki_init_user_s(cwiki_user_s* cwiki_user_data) {
     cwiki_user_data->selected_article_pageid = 0;
     cwiki_user_data->url_response_article = malloc(1);
     cwiki_user_data->url_response_article_size = 0;
+}
 
-    return cwiki_user_data;
+void cwiki_destroy_user() {
+    free(cwiki_user_data->search);
+    free(cwiki_user_data->url_response_search);
+    free(cwiki_user_data->selected_article_title);
+    free(cwiki_user_data->url_response_article);
+    free(cwiki_user_data);
 }

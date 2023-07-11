@@ -17,7 +17,9 @@ typedef struct {
 
 extern cwiki_user_s *cwiki_user_data;
 
-cwiki_user_s *cwiki_init_user_s(cwiki_user_s*);
+void cwiki_init_user();
+
+void cwiki_destroy_user();
 
 /*
  * Create an enum with different states of the program

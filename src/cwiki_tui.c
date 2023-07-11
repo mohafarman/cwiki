@@ -112,6 +112,8 @@ void cwiki_tui_window_search() {
 	echo();
 	curs_set(1);
 
+	/* NOTE: only first word of user input is stored in search */
+	/* TODO: Make whole sentence get stored in search */
 	mvwscanw(window_search, 1, 1, "%s", search);
 
 	noecho();
