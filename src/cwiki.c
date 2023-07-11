@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     /* NOTE: text_search only reads in a word, not sentences */
     cwiki_user_data = cwiki_init_user_s(cwiki_user_data);
 
-    enum cwiki_curl curl = SEARCH;
+    enum cwiki_curl curl;
 
     // 1. Logging
     cwiki_log_init_debug();
@@ -54,6 +54,7 @@ int main(int argc, char *argv[]) {
 
         cwiki_tui_screen_clear();
 
+        curl = SEARCH;
         /* curl user search */
         if (cwiki_curl_url(curl) != -1) {
             // printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_size);
