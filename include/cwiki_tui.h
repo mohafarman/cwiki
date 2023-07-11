@@ -31,8 +31,8 @@ void cwiki_tui_screen_clear();
 WINDOW *cwiki_tui_window_create(int, int, int, int, const char*);
 
 void cwiki_tui_window_search();
-void cwiki_tui_window_articles(cwiki_user_s*);
-void cwiki_tui_window_article_view(cwiki_user_s*);
+void cwiki_tui_window_articles();
+void cwiki_tui_window_article_view();
 
 void cwiki_tui_window_focus(WINDOW*, bool);
 

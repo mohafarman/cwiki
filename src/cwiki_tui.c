@@ -1,4 +1,3 @@
-#include "../include/cwiki.h"
 #include "../include/cwiki_tui.h"
 #include "../include/cwiki_log.h"
 
@@ -104,6 +103,7 @@ WINDOW *cwiki_tui_window_create(int height, int width, int start_y, int start_x,
 
 void cwiki_tui_window_search() {
 	const char *header = "| Search |";
+	char search[52];
 	/* Center the search window */
 	WINDOW *window_search = cwiki_tui_window_create(WINDOW_SEARCH_HEIGHT, WINDOW_SEARCH_WIDTH,
 													cwiki_tui_screen_height/5 + (cwiki_tui_screen_height / 6),
@@ -112,15 +112,18 @@ void cwiki_tui_window_search() {
 	echo();
 	curs_set(1);
 
-	mvwscanw(window_search, 1, 1, "%s", cwiki_user_data->text_search);
+	mvwscanw(window_search, 1, 1, "%s", search);
 
 	noecho();
 	curs_set(0);
 
+	cwiki_user_data->search = malloc(sizeof search + 1);
+	strcpy(cwiki_user_data->search, search);
+
 	delwin(window_search);
 }
 
-void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
+void cwiki_tui_window_articles() {
 	ITEM **items_articles;
 	MENU *menu_articles;
 	int num_article = 0;
@@ -137,7 +140,7 @@ void cwiki_tui_window_articles(cwiki_user_s* cwiki_user_data) {
 
 	// const char *header = "| Results |";
 	strcat(header, "| Results for '");
-	strcat(header, cwiki_user_data->text_search);
+	strcat(header, cwiki_user_data->search);
 	strcat(header, "' |");
 
 	const char *header_preview = "| Preview |";
@@ -277,8 +280,7 @@ end:
 	cwiki_tui_screen_clear();
 }
 
-void cwiki_tui_window_article_view(cwiki_user_s* cwiki_user_data) {
-	(void)cwiki_user_data;
+void cwiki_tui_window_article_view() {
 	WINDOW *window_article_view, *window_article_toc, *window_focus;
 	PANEL  *panel_article_view, *panel_article_toc, *panel_focus;
 	int article_view_height, article_view_width;

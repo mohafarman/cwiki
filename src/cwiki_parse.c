@@ -21,7 +21,7 @@ int cwiki_parse_search(cwiki_user_s* cwiki_user_data) {
     char *string_timestamp = NULL;
     // char *string_snippet_pretty = NULL;
 
-    cJSON *search_json = cJSON_Parse(cwiki_user_data->url_response);
+    cJSON *search_json = cJSON_Parse(cwiki_user_data->url_response_search);
 
     if (search_json == NULL) {
         const char *error_ptr = cJSON_GetErrorPtr();

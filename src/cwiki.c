@@ -30,8 +30,9 @@ int main(int argc, char *argv[]) {
 
     /* Initialize user data */
     /* NOTE: text_search only reads in a word, not sentences */
-    // cwiki_user_data = malloc(sizeof(cwiki_user_s));
     cwiki_user_data = cwiki_init_user_s(cwiki_user_data);
+
+    enum cwiki_curl curl = SEARCH;
 
     // 1. Logging
     cwiki_log_init_debug();
@@ -41,18 +42,20 @@ int main(int argc, char *argv[]) {
 
      do
      {
+        /* refresh is called twice from here */
+        cwiki_tui_screen_clear();
         /* Print logo */
         cwiki_tui_screen_logo();
         refresh();
+        /* to here */
+
         /* User search article */
         cwiki_tui_window_search();
 
         cwiki_tui_screen_clear();
 
-        cwiki_curl_url_search(cwiki_user_data);
-
         /* curl user search */
-        if (cwiki_curl_url(cwiki_user_data, FALSE) != -1) {
+        if (cwiki_curl_url(curl) != -1) {
             // printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_size);
             // printf("%s\n", cwiki_user_data->url_response);
         }
@@ -65,34 +68,33 @@ int main(int argc, char *argv[]) {
 
         /* show results */
         /* NOTE: User can now select an article */
-        cwiki_tui_window_articles(cwiki_user_data);
+        cwiki_tui_window_articles();
 
-        /* Create a valid url */
-        cwiki_curl_url_article(cwiki_user_data);
-
-        /* TODO: Curl article */
-        if (cwiki_curl_url(cwiki_user_data, TRUE) == -1) {
-            break;
+        curl = ARTICLE;
+        if (cwiki_curl_url(curl) != -1) {
+            // printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_article_size);
+            // printf("%s\n", cwiki_user_data->url_response_article);
         }
+        // cwiki_curl_url_debug();
 
         /* NOTE: consider using panel.h for viewing article and toc, so user can also cycle between them */
-        cwiki_tui_window_article_view(cwiki_user_data);
+        cwiki_tui_window_article_view();
 
         /* used to continue the program and displays the search bar */
-        // ungetch(' ');
+        ungetch(' ');
 
     } while ( (c = wgetch(stdscr)) != 'q' );
 
     endwin();
 
     /* Debugging purposes */
-    printf("URL: %s\n", cwiki_user_data->url);
-    /* Prints gibberish, somethings wrong with memory alloc */
-    printf("size: %lu\n", cwiki_user_data->url_response_size);
-    printf("RESPONSE: %s\n", cwiki_user_data->url_response);
+    printf("size: %lu\n", cwiki_user_data->url_response_article_size);
+    printf("RESPONSE: %s\n", cwiki_user_data->url_response_article);
 
-    free(cwiki_user_data->url_response);
+    free(cwiki_user_data->search);
+    free(cwiki_user_data->url_response_search);
     free(cwiki_user_data->selected_article_title);
+    free(cwiki_user_data->url_response_article);
     free(cwiki_user_data);
 
     zlog_info(log_debug, "Terminating application");
@@ -102,10 +104,10 @@ int main(int argc, char *argv[]) {
 cwiki_user_s *cwiki_init_user_s(cwiki_user_s* cwiki_user_data) {
     cwiki_user_data = calloc(1, sizeof(cwiki_user_s));
 
-    // strcpy(cwiki_user_data->text_search, "");
+    cwiki_user_data->search = NULL;
     cwiki_user_data->url = NULL;
-    cwiki_user_data->url_response = malloc(1);
-    cwiki_user_data->url_response_size = 0;
+    cwiki_user_data->url_response_search = malloc(1);
+    cwiki_user_data->url_response_search_size = 0;
     cwiki_user_data->url_response_parsed[9][4] = calloc(1, sizeof cwiki_user_data->url_response_parsed[9][4]);
     cwiki_user_data->selected_article_title = NULL;
     cwiki_user_data->selected_article_pageid = 0;
