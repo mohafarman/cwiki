@@ -13,6 +13,7 @@ typedef struct {
     int selected_article_pageid;
     char *url_response_article;
     size_t url_response_article_size;
+    char *url_response_article_parsed;
 } cwiki_user_s;
 
 extern cwiki_user_s *cwiki_user_data;

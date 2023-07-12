@@ -77,6 +77,8 @@ int main(int argc, char *argv[]) {
         }
         // cwiki_curl_url_debug();
 
+        cwiki_parse_article();
+
         /* NOTE: consider using panel.h for viewing article and toc, so user can also cycle between them */
         cwiki_tui_window_article_view();
 
@@ -90,7 +92,9 @@ int main(int argc, char *argv[]) {
     /* Debugging purposes */
     printf("URL: %s\n", cwiki_user_data->url);
     printf("size: %lu\n", cwiki_user_data->url_response_article_size);
-    printf("RESPONSE: %s\n", cwiki_user_data->url_response_article);
+    // printf("Response: %s\n", cwiki_user_data->url_response_search);
+    // printf("Response: %s\n", cwiki_user_data->url_response_article);
+    printf("Article parsed: %s\n", cwiki_user_data->url_response_article_parsed);
 
     cwiki_destroy_user();
 
@@ -110,6 +114,7 @@ void cwiki_init_user() {
     cwiki_user_data->selected_article_pageid = 0;
     cwiki_user_data->url_response_article = malloc(1);
     cwiki_user_data->url_response_article_size = 0;
+    cwiki_user_data->url_response_article_parsed = NULL;
 }
 
 void cwiki_destroy_user() {

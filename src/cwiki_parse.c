@@ -3,6 +3,7 @@
 
 #include <cjson/cJSON.h>
 #include <stdlib.h>
+#include <string.h>
 
 int cwiki_parse_search() {
     int status = 0;
@@ -86,6 +87,54 @@ end:
 }
 
 int cwiki_parse_article() {
+    int status = 0;
+
+    const cJSON *query = NULL;
+    const cJSON *pages = NULL;
+    const cJSON *page = NULL;
+    char *string_text = NULL;
+
+    cJSON *article_json = cJSON_Parse(cwiki_user_data->url_response_article);
+
+    if (article_json == NULL) {
+        const char *error_ptr = cJSON_GetErrorPtr();
+        if (error_ptr != NULL)
+        {
+            fprintf(stderr, "Error before: %s\n", error_ptr);
+        }
+        status = -1;
+        goto end;
+    }
+
+    query = cJSON_GetObjectItemCaseSensitive(article_json, "query");
+    pages = cJSON_GetObjectItemCaseSensitive(query, "pages");
+
+    cJSON_ArrayForEach(page, pages)
+    {
+        cJSON *extract = cJSON_GetObjectItemCaseSensitive(page, "extract");
+
+        if (!cJSON_IsString(extract)) {
+            status = -1;
+            goto end;
+        }
+
+        // string_text = cJSON_Print(extract);
+        string_text = cJSON_GetStringValue(extract);
+
+        /* Prettify the strings */
+        // cwiki_utils_remove_quotation_marks(string_text);
+
+        cwiki_user_data->url_response_article_parsed = malloc(strlen(string_text) + 1);
+        strcpy(cwiki_user_data->url_response_article_parsed, string_text);
+    }
+
+    /* Successfully parsed */
+    status = 0;
+    goto end;
+
+end:
+    cJSON_Delete(article_json);
+    return status;
 
     return 0;
 }
