@@ -118,11 +118,7 @@ int cwiki_parse_article() {
             goto end;
         }
 
-        // string_text = cJSON_Print(extract);
         string_text = cJSON_GetStringValue(extract);
-
-        /* Prettify the strings */
-        // cwiki_utils_remove_quotation_marks(string_text);
 
         cwiki_user_data->url_response_article_parsed = malloc(strlen(string_text) + 1);
         strcpy(cwiki_user_data->url_response_article_parsed, string_text);

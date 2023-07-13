@@ -71,6 +71,11 @@ int main(int argc, char *argv[]) {
         cwiki_tui_window_articles();
 
         curl = ARTICLE;
+        /* NOTE: Why not just do the parsing in the curl file? */
+        /* NOTE: I can follow the examples from the curl website (htmltidy.c) */
+        /*       to also manage the html */
+        /* NOTE: Maybe not. Might be easier to manage everything if the html
+         *       is parsed on its own */
         if (cwiki_curl_url(curl) != -1) {
             // printf("%lu bytes retrieved\n", (unsigned long)cwiki_user_data->url_response_article_size);
             // printf("%s\n", cwiki_user_data->url_response_article);
