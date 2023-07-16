@@ -136,20 +136,27 @@ end:
 }
 
 int cwiki_parse_html_article() {
-    const char *article = (const char*)cwiki_user_data->url_response_article_parsed;
-    int length = strlen(article);
+    int length = 0;
+    xmlDocPtr doc = NULL;
+    const char *article = NULL;
+    const char *article_root = NULL;
 
-    xmlDocPtr doc = xmlReadMemory(article, length, "noname.xml", NULL, 0);
+    article = (const char*)cwiki_user_data->url_response_article_parsed;
+
+    article_root = cwiki_parse_html_add_root_to_html(article);
+    length = strlen(article_root);
+
+    doc = xmlReadMemory(article_root, length, "noname.xml", NULL, 0);
 
     if (doc == NULL) {
         fprintf(stderr, "Failed to parse XML\n");
         return -1;
     }
 
-    cwiki_article_data->headers_count++;
-    xmlNodePtr root = xmlDocGetRootElement(doc);
+    // cwiki_article_data->headers_count++;
+    // xmlNodePtr root = xmlDocGetRootElement(doc);
 
-    cwiki_parse_count_paragraphs(root);
+    // cwiki_parse_count_paragraphs(root);
 
     xmlFreeDoc(doc);
     xmlCleanupParser();
@@ -167,4 +174,45 @@ void cwiki_parse_count_paragraphs(xmlNodePtr node) {
         }
         cwiki_parse_count_paragraphs(cur->children);
     }
+}
+
+char *cwiki_parse_html_add_root_to_html(const char *html) {
+
+    // Create a new XML document
+    xmlDocPtr doc = xmlNewDoc((const xmlChar*)"1.0");
+    if (doc == NULL) {
+        fprintf(stderr, "Failed to create XML document\n");
+        return NULL;
+    }
+
+    // Add a root node to the document
+    xmlNodePtr root = xmlNewNode(NULL, (const xmlChar*)"root");
+    if (root == NULL) {
+        fprintf(stderr, "Failed to create root node\n");
+        xmlFreeDoc(doc);
+        return NULL;
+    }
+    xmlDocSetRootElement(doc, root);
+
+    // Create a text node containing the HTML string
+    xmlNodePtr htmlNode = xmlNewText((const xmlChar*)html);
+    if (htmlNode == NULL) {
+        fprintf(stderr, "Failed to create HTML node\n");
+        xmlFreeDoc(doc);
+        return NULL;
+    }
+
+    // Add the HTML node as a child of the root node
+    xmlAddChild(root, htmlNode);
+
+    // Serialize the XML document to a string
+    xmlChar* xmlString;
+    int xmlStringSize;
+    xmlDocDumpFormatMemory(doc, &xmlString, &xmlStringSize, 1);
+
+    // xmlDocPtr doc = xmlReadMemory(article, length, "noname.xml", NULL, 0);
+
+    // Cleanup and return the XML string
+    xmlFreeDoc(doc);
+    return (char*)xmlString;
 }

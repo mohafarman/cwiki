@@ -12,6 +12,8 @@ int cwiki_parse_article();
 
 int cwiki_parse_html_article();
 
+char *cwiki_parse_html_add_root_to_html(const char*);
+
 void cwiki_parse_count_paragraphs(xmlNodePtr);
 
 #endif // CWIKI_PARSE_H_
