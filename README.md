@@ -28,6 +28,5 @@ Inspired by the [wiki-tui](https://github.com/Builditluc/wiki-tui) project.
 # Acknowledgements
 
 * [ncurses](https://invisible-island.net/ncurses/announce.html)
-* [zlog](https://github.com/HardySimpson/zlog)
 * [libcurl](https://curl.se/libcurl/)
 * [cjson](https://github.com/DaveGamble/cJSON)

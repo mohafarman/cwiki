@@ -1,5 +1,5 @@
 #include "../include/cwiki_tui.h"
-#include "../include/cwiki_log.h"
+// #include "../include/cwiki_log.h"
 
 #include <stdlib.h>
 
@@ -26,8 +26,6 @@ void cwiki_tui_init_ncurses() {
 	getmaxyx(stdscr, cwiki_tui_screen_height, cwiki_tui_screen_width);
 
 	cwiki_tui_screen_clear();
-
-	zlog_info(log_debug, "ncurses initialized");
 }
 
 void cwiki_tui_screen_decorate() {

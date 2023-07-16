@@ -1,6 +1,5 @@
 #include "../include/cwiki.h"
 #include "../include/cwiki_tui.h"
-#include "../include/cwiki_log.h"
 #include "../include/cwiki_curl.h"
 #include "../include/cwiki_utils.h"
 #include "../include/cwiki_parse.h"
@@ -34,9 +33,6 @@ int main(int argc, char *argv[]) {
     cwiki_init_article();
 
     enum cwiki_curl curl;
-
-    // 1. Logging
-    cwiki_log_init_debug();
 
     /* Setup ncurses */
     cwiki_tui_init_ncurses();
@@ -113,7 +109,6 @@ int main(int argc, char *argv[]) {
     cwiki_destroy_user();
     cwiki_destroy_article();
 
-    zlog_info(log_debug, "Terminating application");
     return 0;
 }
 
