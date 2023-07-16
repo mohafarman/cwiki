@@ -7,8 +7,11 @@
 EXECUTABLE = cwiki
 
 CC = gcc
-CFLAGS=-g3 -O0 -Wall -Werror -pedantic -std=c11
-LDLIBS = -lm -lncurses -lmenu -lcurl -lcjson -lpanel -lxml2
+# On ubuntu, gcc is changed to add --as-needed to the linke (https://stackoverflow.com/questions/21140269/gcc-undefined-reference-error-on-ubuntu#21144496)
+# Which means: "Binaries, which are using symbols from an indirectly linked shared library will fail to link"
+# Wl, --no-as-needed: will allow the indirectly linking of shared libaries
+CFLAGS= -g3 -O0 -Wall -Werror -pedantic -std=c11 -Wl,--no-as-needed
+LDLIBS = -I/usr/include/libxml2 -lm -lncurses -lmenu -lcurl -lcjson -lpanel -lxml2
 COMPILE = $(CC) $(CFLAGS) $(LDLIBS)
 
 BUILD_DIR := ./bin

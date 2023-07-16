@@ -1,5 +1,4 @@
 #include "../include/cwiki_tui.h"
-// #include "../include/cwiki_log.h"
 
 #include <stdlib.h>
 
@@ -205,7 +204,7 @@ void cwiki_tui_window_articles() {
 	wnoutrefresh(window_info);
 
 	/* Print the preview_text of the first entry already */
-	mvwprintw(window_preview_text, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
+	mvwprintw(window_preview_text, 0, 0, "%s", cwiki_user_data->url_response_parsed[num_article][2]);
 	wnoutrefresh(window_preview_text);
 
 	mvwprintw(window_info_text, 0, 0, "Pages: %s", cwiki_user_data->url_response_parsed[num_article][3]); /* Print word count */
@@ -228,7 +227,7 @@ void cwiki_tui_window_articles() {
 				}
 				wclear(window_preview_text);
 				wclear(window_info_text);
-				mvwprintw(window_preview_text, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
+				mvwprintw(window_preview_text, 0, 0, "%s", cwiki_user_data->url_response_parsed[num_article][2]);
 				mvwprintw(window_info_text, 0, 0, "Pages: %s", cwiki_user_data->url_response_parsed[num_article][3]); /* Print word count */
 				mvwprintw(window_info_text, 1, 0, "Edited: %s", cwiki_user_data->url_response_parsed[num_article][4]); /* Print timestamp */
 				wnoutrefresh(window_preview_text);
@@ -244,7 +243,7 @@ void cwiki_tui_window_articles() {
 				}
 				wclear(window_preview_text);
 				wclear(window_info_text);
-				mvwprintw(window_preview_text, 0, 0, cwiki_user_data->url_response_parsed[num_article][2]);
+				mvwprintw(window_preview_text, 0, 0, "%s", cwiki_user_data->url_response_parsed[num_article][2]);
 				mvwprintw(window_info_text, 0, 0, "Pages: %s", cwiki_user_data->url_response_parsed[num_article][3]); /* Print word count */
 				mvwprintw(window_info_text, 1, 0, "Edited: %s", cwiki_user_data->url_response_parsed[num_article][4]); /* Print timestamp */
 				wnoutrefresh(window_preview_text);
