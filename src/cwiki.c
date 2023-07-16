@@ -9,6 +9,7 @@
 #include <stdlib.h>
 
 cwiki_user_s *cwiki_user_data;
+cwiki_article_s *cwiki_article_data;
 
 int main(int argc, char *argv[]) {
     char c;
@@ -28,8 +29,9 @@ int main(int argc, char *argv[]) {
         return EXIT_SUCCESS;
     }
 
-    /* Initialize user data */
+    /* Initialize program defined data */
     cwiki_init_user();
+    cwiki_init_article();
 
     enum cwiki_curl curl;
 
@@ -84,6 +86,11 @@ int main(int argc, char *argv[]) {
 
         cwiki_parse_article();
 
+        /* NOTE: returns -1 */
+        if (cwiki_parse_html_article() == -1) {
+            break;
+        }
+
         /* NOTE: consider using panel.h for viewing article and toc, so user can also cycle between them */
         cwiki_tui_window_article_view();
 
@@ -99,9 +106,12 @@ int main(int argc, char *argv[]) {
     printf("size: %lu\n", cwiki_user_data->url_response_article_size);
     // printf("Response: %s\n", cwiki_user_data->url_response_search);
     // printf("Response: %s\n", cwiki_user_data->url_response_article);
-    printf("Article parsed: %s\n", cwiki_user_data->url_response_article_parsed);
+    // printf("Article parsed: %s\n", cwiki_user_data->url_response_article_parsed);
+    // printf("A Title: %s\n", cwiki_article_data->headers[1]);
+    printf("A Title: %d\n", cwiki_article_data->headers_count);
 
     cwiki_destroy_user();
+    cwiki_destroy_article();
 
     zlog_info(log_debug, "Terminating application");
     return 0;
@@ -122,10 +132,27 @@ void cwiki_init_user() {
     cwiki_user_data->url_response_article_parsed = NULL;
 }
 
+void cwiki_init_article() {
+    cwiki_article_data = calloc(1, sizeof(cwiki_article_s));
+
+    cwiki_article_data->paragraph = NULL;
+    cwiki_article_data->headers = NULL;
+    cwiki_article_data->headers_count = 0;
+}
+
 void cwiki_destroy_user() {
     free(cwiki_user_data->search);
     free(cwiki_user_data->url_response_search);
     free(cwiki_user_data->selected_article_title);
     free(cwiki_user_data->url_response_article);
     free(cwiki_user_data);
+}
+
+void cwiki_destroy_article() {
+    if (cwiki_article_data->paragraph != NULL) {
+        free(cwiki_article_data->paragraph);
+    }
+    if (cwiki_article_data->headers != NULL) {
+        free(cwiki_article_data->headers);
+    }
 }

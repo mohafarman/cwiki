@@ -7,8 +7,8 @@
 EXECUTABLE = cwiki
 
 CC = gcc
-CFLAGS=-g3 -Wall -Werror -pedantic -std=c11 -O0
-LDLIBS = -lm -lncurses -lmenu -lzlog -lcurl -lcjson -lpanel
+CFLAGS=-g3 -O0 -Wall -Werror -pedantic -std=c11
+LDLIBS = -lm -lncurses -lmenu -lzlog -lcurl -lcjson -lpanel -lxml2
 COMPILE = $(CC) $(CFLAGS) $(LDLIBS)
 
 BUILD_DIR := ./bin

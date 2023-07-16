@@ -4,6 +4,12 @@
 #include <stdio.h>
 
 typedef struct {
+    char **headers;
+    int headers_count;
+    char *paragraph;
+} cwiki_article_s;
+
+typedef struct {
     char *search;
     char *url;
     char *url_response_search;
@@ -17,10 +23,13 @@ typedef struct {
 } cwiki_user_s;
 
 extern cwiki_user_s *cwiki_user_data;
+extern cwiki_article_s *cwiki_article_data;
 
 void cwiki_init_user();
+void cwiki_init_article();
 
 void cwiki_destroy_user();
+void cwiki_destroy_article();
 
 /*
  * Create an enum with different states of the program

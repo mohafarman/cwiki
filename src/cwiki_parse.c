@@ -134,3 +134,37 @@ end:
 
     return 0;
 }
+
+int cwiki_parse_html_article() {
+    const char *article = (const char*)cwiki_user_data->url_response_article_parsed;
+    int length = strlen(article);
+
+    xmlDocPtr doc = xmlReadMemory(article, length, "noname.xml", NULL, 0);
+
+    if (doc == NULL) {
+        fprintf(stderr, "Failed to parse XML\n");
+        return -1;
+    }
+
+    cwiki_article_data->headers_count++;
+    xmlNodePtr root = xmlDocGetRootElement(doc);
+
+    cwiki_parse_count_paragraphs(root);
+
+    xmlFreeDoc(doc);
+    xmlCleanupParser();
+
+    return 0;
+}
+
+void cwiki_parse_count_paragraphs(xmlNodePtr node) {
+    for (xmlNodePtr cur = node; cur; cur = cur->next) {
+        if (cur->type == XML_ELEMENT_NODE && xmlStrcmp(cur->name, (const xmlChar*)"p") == 0) {
+            xmlChar* content = xmlNodeGetContent(cur);
+            // printf("Paragraph: %s\n", content);
+            xmlFree(content);
+            cwiki_article_data->headers_count++;
+        }
+        cwiki_parse_count_paragraphs(cur->children);
+    }
+}

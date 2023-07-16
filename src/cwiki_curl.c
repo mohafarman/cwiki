@@ -4,11 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef unsigned int uint;
-typedef unsigned long ulong;
-#include <tidy.h>
-#include <tidybuffio.h>
-
 #define URL_BUFSIZE 128
 
 int cwiki_curl_set_url_search() {
